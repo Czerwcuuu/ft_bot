@@ -16,9 +16,9 @@ ele.click()
 ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[1]/div[1]/h5")[0]
 ele.click()
 ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[1]/input")[0]
-ele.send_keys("fortepiany11@interia.pl")
+ele.send_keys("login")
 ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[2]/input")[0]
-ele.send_keys("aiqu4voh123")
+ele.send_keys("password")
 ele = driver.find_elements_by_xpath("//*[@id='btn-login']")[0]
 ele.click()
 time.sleep(5)
