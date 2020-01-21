@@ -31,9 +31,9 @@ def doubleclicker(a,b):
         if how_much_wait2 > how_much_wait:
             how_much_wait = how_much_wait2
         
-        print(how_much_wait)
-        print(how_much_wait2)
-        print(count)
+        print(f"Na koniec treningu 1 umiejetnosci trzeba czekac:{how_much_wait}")
+        print(f"Na koniec treningu 2 umiejetnosci trzeba czekac:{how_much_wait2}")
+        print(f"BOT wykonał już {count} treningow!")
         
         wheretomove =  driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{a}]")
         hover = ActionChains(driver).move_to_element(wheretomove)
@@ -48,7 +48,7 @@ def doubleclicker(a,b):
         ele.click()
         
         time.sleep(how_much_wait+2)
-        count = count + 1
+        count = count + 2
         #GDY WYWALA PRZEZ KOMuNIKATY UKONCZONEGO TRENINGU
         '''if count == 6:
             count = 0
@@ -62,9 +62,9 @@ ele.click()
 ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[1]/div[1]/h5")[0]
 ele.click()
 ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[1]/input")[0]
-ele.send_keys("fortepiany12@interia.pl")
+ele.send_keys("login")
 ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[2]/input")[0]
-ele.send_keys("aiqu4voh123")
+ele.send_keys("haslo")
 ele = driver.find_elements_by_xpath("//*[@id='btn-login']")[0]
 ele.click()
 time.sleep(5)
