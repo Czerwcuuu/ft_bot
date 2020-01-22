@@ -1,11 +1,15 @@
 import time
 import re
+import sys
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import InvalidElementStateException
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import ElementClickInterceptedException
 '''
 
 ATAK:2
@@ -18,44 +22,69 @@ STALE FRAGMENTY:8
 SKUTECZNOSC:9
 
 '''
-trening1=2
-trening2=7
-login = "login@gmail.com"
+trening1=3
+trening2=6
+login = "email"
 password = "password"
 
 #doubleclicker gdy chcesz ulepszac dwie umiejetnosci na raz
 def doubleclicker(a,b):
     count = 0
     while(1):
-        text = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{a}]/div[1]/div[2]/div[3]/div[2]/span[1]")
-        text2 = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{b}]/div[1]/div[2]/div[3]/div[2]/span[1]")
-        how_much_wait = int(re.search(r'\d+', text.text).group())
-        how_much_wait2 = int(re.search(r'\d+', text2.text).group())
-        if how_much_wait2 > how_much_wait:
-            how_much_wait = how_much_wait2
-        
-        print(f"Na koniec treningu 1 umiejetnosci trzeba czekac:{how_much_wait}")
-        print(f"Na koniec treningu 2 umiejetnosci trzeba czekac:{how_much_wait2}")
-        print(f"BOT wykonał już {count} treningow!")
-        
-        wheretomove =  driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{a}]")
-        hover = ActionChains(driver).move_to_element(wheretomove)
-        hover.perform()
-        ele = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{a}]/div[1]/div[2]/button[1]")
-        ele.click()
+        try:
+            finallmoney = "";
+            money = driver.find_element_by_xpath("/html[1]/body[1]/div[1]/div[1]/header[1]/div[2]/ul[1]/li[3]/p[1]")
+            text = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{a}]/div[1]/div[2]/div[3]/div[2]/span[1]")
+            text2 = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{b}]/div[1]/div[2]/div[3]/div[2]/span[1]")
+            cost1 = driver.find_element_by_xpath(f"//div[{a}]//div[1]//div[2]//div[3]//div[1]//span[1]")
+            cost2 = driver.find_element_by_xpath(f"//div[{b}]//div[1]//div[2]//div[3]//div[1]//span[1]")
+            how_much_wait = int(re.search(r'\d+', text.text).group())
+            how_much_wait2 = int(re.search(r'\d+', text2.text).group())
+            price1=int(re.search(r'\d+', cost1.text).group())
+            price2=int(re.search(r'\d+', cost2.text).group())
+            money = re.findall(r'\d+', money.text)
+            for x in money:
+                finallmoney +=x
+            money = int(finallmoney)
+            if price2 > price1:
+                price1 = price2
+            if how_much_wait2 > how_much_wait:
+                how_much_wait = how_much_wait2
+            if price1>money:
+                print("Koniec pieniedzy na koncie w grze, koncze dzialanie bota")
+                sys.exit(0)
+            print(f"Ilosc pieniedzy na koncie:{money}")
+            print(f"Na koniec treningu 1 umiejetnosci trzeba czekac:{how_much_wait}, cena treningu:{price1}")
+            print(f"Na koniec treningu 2 umiejetnosci trzeba czekac:{how_much_wait2}, cena treningu:{price2}")
+            count = count + 2
+            print(f"BOT wykonał już {count} treningow!")
+            
+            wheretomove =  driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{a}]")
+            hover = ActionChains(driver).move_to_element(wheretomove)
+            hover.perform()
+            ele = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{a}]/div[1]/div[2]/button[1]")
+            ele.click()
 
-        wheretomove =  driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{b}]")
-        hover = ActionChains(driver).move_to_element(wheretomove)
-        hover.perform()
-        ele = driver.find_element_by_xpath(f"//div[{b}]//div[1]//div[2]//button[1]")
-        ele.click()
-        
-        time.sleep(how_much_wait+2)
-        count = count + 2
-        #GDY WYWALA PRZEZ KOMuNIKATY UKONCZONEGO TRENINGU
-        '''if count == 6:
-            count = 0
-            time.sleep(10)'''
+            wheretomove =  driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{b}]")
+            hover = ActionChains(driver).move_to_element(wheretomove)
+            hover.perform()
+            ele = driver.find_element_by_xpath(f"//div[{b}]//div[1]//div[2]//button[1]")
+            ele.click()
+            
+            time.sleep(how_much_wait+2)
+            #GDY WYWALA PRZEZ KOMuNIKATY UKONCZONEGO TRENINGU
+            '''if count == 6:
+                count = 0
+                time.sleep(10)'''
+        except InvalidElementStateException as e:
+            print("===BOT nie moze wcisnac guzika! Ponizej wiecej szczegolow!===")
+            print(e)
+        except NoSuchElementException as e:
+            print("===BOT nie moze znalezc guzika! Ponizej wiecej info!===")
+            print(e)
+        except ElementClickInterceptedException as e:
+            print("===BOT nie moze wcisnac guzika, poniewaz jest czyms zakryty!===")
+            print(e)
     return
 
 driver = webdriver.Chrome()
