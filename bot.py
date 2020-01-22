@@ -7,8 +7,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 '''
-W argumencie funckcji doubleclicker podaj liczby odpowiedzalne za dana funckje: np doubleclicker(2,3)
-Dodatkowo musisz wprowadzic swoj login i haslo w miejscu "login" i "password"
 
 ATAK:2
 OBRONA:3
@@ -20,6 +18,11 @@ STALE FRAGMENTY:8
 SKUTECZNOSC:9
 
 '''
+trening1=2
+trening2=7
+login = "login@gmail.com"
+password = "password"
+
 #doubleclicker gdy chcesz ulepszac dwie umiejetnosci na raz
 def doubleclicker(a,b):
     count = 0
@@ -62,9 +65,9 @@ ele.click()
 ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[1]/div[1]/h5")[0]
 ele.click()
 ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[1]/input")[0]
-ele.send_keys("login")
+ele.send_keys(login)
 ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[2]/input")[0]
-ele.send_keys("haslo")
+ele.send_keys(password)
 ele = driver.find_elements_by_xpath("//*[@id='btn-login']")[0]
 ele.click()
 time.sleep(5)
@@ -72,5 +75,5 @@ driver.get("https://game.footballteam.pl/training")
 time.sleep(5)
 how_much_wait = 0
 #tutaj zmien argumenty
-doubleclicker(6,3)
+doubleclicker(trening1,trening2)
 
