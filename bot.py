@@ -7,11 +7,14 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import InvalidElementStateException
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import ElementClickInterceptedException
-'''
+from selenium.common.exceptions import InvalidElementStateException,ElementClickInterceptedException,NoSuchElementException
 
+#USTAWIENIA ====================================================================
+trening1=7 #Tu wpisz wybrany trening1
+trening2=3 #Tu wpisz wybrany trening2
+login = "login" #Tu wpisz wybrany login
+password = "password"    #Tu wpisz wybrany haslo
+'''
 ATAK:2
 OBRONA:3
 ROZGRYWANIE:4
@@ -20,12 +23,8 @@ CZYTANIE GRY:6
 PRESSING:7
 STALE FRAGMENTY:8
 SKUTECZNOSC:9
-
 '''
-trening1=3
-trening2=6
-login = "email"
-password = "password"
+#USTAWIENIA ====================================================================
 
 #doubleclicker gdy chcesz ulepszac dwie umiejetnosci na raz
 def doubleclicker(a,b):
@@ -46,6 +45,8 @@ def doubleclicker(a,b):
             for x in money:
                 finallmoney +=x
             money = int(finallmoney)
+            print(f"Na koniec treningu 1 umiejetnosci trzeba czekac:{how_much_wait}, cena treningu:{price1}")
+            print(f"Na koniec treningu 2 umiejetnosci trzeba czekac:{how_much_wait2}, cena treningu:{price2}")
             if price2 > price1:
                 price1 = price2
             if how_much_wait2 > how_much_wait:
@@ -54,8 +55,6 @@ def doubleclicker(a,b):
                 print("Koniec pieniedzy na koncie w grze, koncze dzialanie bota")
                 sys.exit(0)
             print(f"Ilosc pieniedzy na koncie:{money}")
-            print(f"Na koniec treningu 1 umiejetnosci trzeba czekac:{how_much_wait}, cena treningu:{price1}")
-            print(f"Na koniec treningu 2 umiejetnosci trzeba czekac:{how_much_wait2}, cena treningu:{price2}")
             count = count + 2
             print(f"BOT wykonał już {count} treningow!")
             
@@ -72,10 +71,6 @@ def doubleclicker(a,b):
             ele.click()
             
             time.sleep(how_much_wait+2)
-            #GDY WYWALA PRZEZ KOMuNIKATY UKONCZONEGO TRENINGU
-            '''if count == 6:
-                count = 0
-                time.sleep(10)'''
         except InvalidElementStateException as e:
             print("===BOT nie moze wcisnac guzika! Ponizej wiecej szczegolow!===")
             print(e)
@@ -103,6 +98,5 @@ time.sleep(5)
 driver.get("https://game.footballteam.pl/training")
 time.sleep(5)
 how_much_wait = 0
-#tutaj zmien argumenty
 doubleclicker(trening1,trening2)
 
