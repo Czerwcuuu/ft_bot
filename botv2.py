@@ -2,78 +2,74 @@ from PyQt5.QtWidgets import QApplication, QWidget,QLabel,QGridLayout,QLineEdit,Q
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
+import time
+import re
+import sys
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait as wait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import InvalidElementStateException,ElementClickInterceptedException,NoSuchElementException
 
 class Bot(QWidget):
     def __init__(self,parent=None):
         super().__init__(parent)
         self.interfejs()
 
-        self.trening1 = 2
-        self.trening2 = 3
+        self.a = 2
+        self.b = 3
+        self.login = "login@interia.pl" #Tu wpisz wybrany login
+        self.password = "xxx"    #Tu wpisz wybrany haslo
 
     def interfejs(self):
         #etykiety
         et_FT = QLabel("<b>FOOTBALLTEAM BOT 1.5<b>",self)
         et_trening = QLabel("TRENUJESZ:",self)
+        atakTxt = QLabel("<b>ATAK<b> - 2:",self)
+        obronaTxt = QLabel("<b>OBRONA<b> - 3:",self)
+        rogrywanieTxt = QLabel("<b>ROZGRYWANIE<b> - 4:",self)
+        kondycjaTxt = QLabel("<b>KONDYCJA<b> - 5:",self)
+        czytaniegryTxt = QLabel("<b>CZYTANIE GRY<b> - 6:",self)
+        pressingTxt = QLabel("<b>PRESSING<b> - 7:",self)
+        stalefragmentyTxt = QLabel("<b>STALE FRAGMENTY<b> - 8:",self)
+        skutecznoscTxt = QLabel("<b>SKUTECZNOSC<b> - 9:",self)
 
         #uklad tabelaryczny
         ukladT = QGridLayout()
         ukladT.addWidget(et_FT,0,0)
         ukladT.addWidget(et_trening,1,0)
-
-        #pola edycyjne
         self.aktualnie_trenowane = QLineEdit()
         self.aktualnie_trenowane2 = QLineEdit()
-        self.aktualnie_trenowane.readonly = True
-        self.aktualnie_trenowane.readonly = True
 
-        #pola edycyjne do ukladu tabelarczynego
-        ukladT.addWidget(self.aktualnie_trenowane,2,0)
-        ukladT.addWidget(self.aktualnie_trenowane2,2,1)
+        ukladT.addWidget(atakTxt,2,0,1,3)
+        ukladT.addWidget(obronaTxt,3,0,1,3)
+        ukladT.addWidget(rogrywanieTxt,4,0,1,3)
+        ukladT.addWidget(kondycjaTxt,5,0,1,3)
+        ukladT.addWidget(czytaniegryTxt,6,0,1,3)
+        ukladT.addWidget(pressingTxt,7,0,1,3)
+        ukladT.addWidget(stalefragmentyTxt,8,0,1,3)
+        ukladT.addWidget(skutecznoscTxt,9,0,1,3)
 
-        #guziki
-        atakBtn = QPushButton("&ATAK",self)
-        obronaBtn = QPushButton("&OBRONA",self)
-        rozgrywanieBtn = QPushButton("&ROZGRYWANIE",self)
-        kondycjaBtn = QPushButton("&KONDYCJA",self)
-        czytanie_gryBtn = QPushButton("&CZYTANIE GRY",self)
-        pressingBtn = QPushButton("&PRESSING",self)
-        stale_fragmentyBtn = QPushButton("&STALE FRAGMENTY",self)
-        skutecznoscBtn = QPushButton("&SKUTECZNOSC",self)
+        ukladT.addWidget(self.aktualnie_trenowane,10,0)
+        ukladT.addWidget(self.aktualnie_trenowane2,10,1)
+
         startBtn = QPushButton("&START",self)
         stopBtn = QPushButton("&STOP",self)
         exitBtn = QPushButton("&WYJSCIE",self)
 
         ukladH1 = QHBoxLayout()
-        ukladH1.addWidget(atakBtn)
-        ukladH1.addWidget(obronaBtn)
-        ukladH1.addWidget(rozgrywanieBtn)
-        ukladH1.addWidget(kondycjaBtn)
+        ukladH1.addWidget(startBtn)
+        ukladH1.addWidget(stopBtn)
 
-        ukladH2 = QHBoxLayout()
-        ukladH2.addWidget(czytanie_gryBtn)
-        ukladH2.addWidget(pressingBtn)
-        ukladH2.addWidget(stale_fragmentyBtn)
-        ukladH2.addWidget(skutecznoscBtn)
-
-        ukladT.addLayout(ukladH1,3,0,1,3)
-        ukladT.addLayout(ukladH2,4,0,1,3)
-        ukladT.addWidget(startBtn,5,0,1,1)
-        ukladT.addWidget(stopBtn,5,1,1,2)
-        ukladT.addWidget(exitBtn,6,0,1,3)
+        ukladT.addLayout(ukladH1,11,0,1,3)
+        ukladT.addWidget(exitBtn,12,0,1,3)
 
         self.setLayout(ukladT)
 
         exitBtn.clicked.connect(self.koniec)
-        atakBtn.clicked.connect(self.wybor)
-        obronaBtn.clicked.connect(self.wybor)
-        rozgrywanieBtn.clicked.connect(self.wybor)
-        kondycjaBtn.clicked.connect(self.wybor)
-        czytanie_gryBtn.clicked.connect(self.wybor)
-        pressingBtn.clicked.connect(self.wybor)
-        stale_fragmentyBtn.clicked.connect(self.wybor)
-        skutecznoscBtn.clicked.connect(self.wybor)
-
+        startBtn.clicked.connect(self.wybor)
 
         self.setGeometry(20,20,300,100)
         self.setWindowTitle("Football Team Bot")
@@ -84,31 +80,90 @@ class Bot(QWidget):
 
     def wybor(self):
         nadawca = self.sender()
+        try:
+            if nadawca.text() == "&START":
+                if int(self.aktualnie_trenowane.text())>1 and int(self.aktualnie_trenowane.text()) < 10 and int(self.aktualnie_trenowane2.text()) < 10 and int(self.aktualnie_trenowane2.text()) > 1:
+                    self.a = int(self.aktualnie_trenowane.text())
+                    self.b = int(self.aktualnie_trenowane2.text())
+                    print(self.a)
+                    print(self.b)
+                    self.StartBot()
+                else:
+                    print("Nie ma takiej opcji")
+        except ValueError:
+            print("Zla wartosc")
+    def StartBot(self):
+        driver = webdriver.Chrome()
+        driver.get("https://footballteam.pl/")
+        ele = driver.find_elements_by_xpath("/html/body/main/section[1]/div/div[5]/div/button[1]")[0]
+        ele.click()
+        ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[1]/div[1]/h5")[0]
+        ele.click()
+        ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[1]/input")[0]
+        ele.send_keys(self.login)
+        ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[2]/input")[0]
+        ele.send_keys(self.password)
+        ele = driver.find_elements_by_xpath("//*[@id='btn-login']")[0]
+        ele.click()
+        time.sleep(5)
+        driver.get("https://game.footballteam.pl/training")
+        time.sleep(5)
+        how_much_wait = 0
+        count = 0
+        while(1):
+            try:
+                print("Working")
+                finallmoney = "";
+                money = driver.find_element_by_xpath("/html[1]/body[1]/div[1]/div[1]/header[1]/div[2]/ul[1]/li[3]/p[1]")
+                text = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.a}]/div[1]/div[2]/div[3]/div[2]/span[1]")
+                text2 = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.b}]/div[1]/div[2]/div[3]/div[2]/span[1]")
+                cost1 = driver.find_element_by_xpath(f"//div[{self.a}]//div[1]//div[2]//div[3]//div[1]//span[1]")
+                cost2 = driver.find_element_by_xpath(f"//div[{self.b}]//div[1]//div[2]//div[3]//div[1]//span[1]")
+                how_much_wait = int(re.search(r'\d+', text.text).group())
+                how_much_wait2 = int(re.search(r'\d+', text2.text).group())
+                price1=int(re.search(r'\d+', cost1.text).group())
+                price2=int(re.search(r'\d+', cost2.text).group())
+                money = re.findall(r'\d+', money.text)
+                for x in money:
+                    finallmoney +=x
+                money = int(finallmoney)
+                print(f"Na koniec treningu 1 umiejetnosci trzeba czekac:{how_much_wait}, cena treningu:{price1}")
+                print(f"Na koniec treningu 2 umiejetnosci trzeba czekac:{how_much_wait2}, cena treningu:{price2}")
+                if price2 > price1:
+                    price1 = price2
+                if how_much_wait2 > how_much_wait:
+                    how_much_wait = how_much_wait2
+                if price1>money:
+                    print("Koniec pieniedzy na koncie w grze, koncze dzialanie bota")
+                    sys.exit(0)
+                print(f"Ilosc pieniedzy na koncie:{money}")
+                count = count + 2
+                print(f"BOT wykonał już {count} treningow!")
+                
+                wheretomove =  driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.a}]")
+                hover = ActionChains(driver).move_to_element(wheretomove)
+                hover.perform()
+                ele = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.a}]/div[1]/div[2]/button[1]")
+                ele.click()
 
-        if nadawca.text() == "&ATAK":
-            self.trening1 = 2
-            self.aktualnie_trenowane.setText(str(self.trening1))
-        if nadawca.text() == "&OBRONA":
-            self.trening1 = 3
-            self.aktualnie_trenowane.setText(str(self.trening1))
-        if nadawca.text() == "&ROZGRYWANIE":
-            self.trening1 = 4
-            self.aktualnie_trenowane.setText(str(self.trening1))
-        if nadawca.text() == "&KONDYCJA":
-            self.trening1 = 5
-            self.aktualnie_trenowane.setText(str(self.trening1))
-        if nadawca.text() == "&CZYTANIE GRY":
-            self.trening1 = 6
-            self.aktualnie_trenowane.setText(str(self.trening1))
-        if nadawca.text() == "&PRESSING":
-            self.trening1 = 7
-            self.aktualnie_trenowane.setText(str(self.trening1))
-        if nadawca.text() == "&STALE FRAGMENTY":
-            self.trening1 = 8
-            self.aktualnie_trenowane.setText(str(self.trening1))
-        if nadawca.text() == "&SKUTECZNOSC":
-            self.trening1 = 9
-            self.aktualnie_trenowane.setText(str(self.trening1))
+                wheretomove =  driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.b}]")
+                hover = ActionChains(driver).move_to_element(wheretomove)
+                hover.perform()
+                ele = driver.find_element_by_xpath(f"//div[{self.b}]//div[1]//div[2]//button[1]")
+                ele.click()
+                
+                time.sleep(how_much_wait+2)
+            except InvalidElementStateException as e:
+                print("===BOT nie moze wcisnac guzika! Ponizej wiecej szczegolow!===")
+                print(e)
+            except NoSuchElementException as e:
+                print("===BOT nie moze znalezc guzika! Ponizej wiecej info!===")
+                print(e)
+            except ElementClickInterceptedException as e:
+                print("===BOT nie moze wcisnac guzika, poniewaz jest czyms zakryty!===")
+                print(e)
+        return
+        
         
         
 if __name__ == '__main__':

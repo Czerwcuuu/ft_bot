@@ -12,8 +12,8 @@ from selenium.common.exceptions import InvalidElementStateException,ElementClick
 #USTAWIENIA ====================================================================
 trening1=6 #Tu wpisz wybrany trening1
 trening2=3 #Tu wpisz wybrany trening2
-login = "fortepiany9@interia.pl" #Tu wpisz wybrany login
-password = "aiqu4voh123"    #Tu wpisz wybrany haslo
+login = "login@interia.pl" #Tu wpisz wybrany login
+password = "xxx"    #Tu wpisz wybrany haslo
 '''
 ATAK:2
 OBRONA:3
