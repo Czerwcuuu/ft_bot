@@ -10,10 +10,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import InvalidElementStateException,ElementClickInterceptedException,NoSuchElementException
 
 #USTAWIENIA ====================================================================
-trening1=7 #Tu wpisz wybrany trening1
+trening1=6 #Tu wpisz wybrany trening1
 trening2=3 #Tu wpisz wybrany trening2
-login = "login" #Tu wpisz wybrany login
-password = "password"    #Tu wpisz wybrany haslo
+login = "fortepiany9@interia.pl" #Tu wpisz wybrany login
+password = "aiqu4voh123"    #Tu wpisz wybrany haslo
 '''
 ATAK:2
 OBRONA:3
