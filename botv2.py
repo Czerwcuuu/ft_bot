@@ -19,39 +19,49 @@ class StartBotThread(QThread):
         QThread.__init__(self)
         self.login = login
         self.password = password
-        self.a = a;
-        self.b = b;
+        self.a = a
+        self.b = b
+        self.go = 0
 
     def __del__(self):
         self.wait()
 
+    def stop(self):
+        if self.go == 1:
+            print("Moge")
+            self.terminate()
+            self.driver.quit()
+        else:
+            print("Nie moge")
+            pass
+        
     def run(self):
-        driver = webdriver.Chrome()
-        driver.get("https://footballteam.pl/")
-        ele = driver.find_elements_by_xpath("/html/body/main/section[1]/div/div[5]/div/button[1]")[0]
+        self.driver = webdriver.Chrome()
+        self.go =1
+        self.driver.get("https://footballteam.pl/")
+        ele = self.driver.find_elements_by_xpath("/html/body/main/section[1]/div/div[5]/div/button[1]")[0]
         ele.click()
-        ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[1]/div[1]/h5")[0]
+        ele = self.driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[1]/div[1]/h5")[0]
         ele.click()
-        ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[1]/input")[0]
+        ele = self.driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[1]/input")[0]
         ele.send_keys(self.login)
-        ele = driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[2]/input")[0]
+        ele = self.driver.find_elements_by_xpath("/html/body/div[1]/div/div/div[2]/div[1]/form/div[2]/input")[0]
         ele.send_keys(self.password)
-        ele = driver.find_elements_by_xpath("//*[@id='btn-login']")[0]
+        ele = self.driver.find_elements_by_xpath("//*[@id='btn-login']")[0]
         ele.click()
         time.sleep(5)
-        driver.get("https://game.footballteam.pl/training")
+        self.driver.get("https://game.footballteam.pl/training")
         time.sleep(5)
         how_much_wait = 0
         count = 0
         while 1:
             try:
-                print("Working")
                 finallmoney = "";
-                money = driver.find_element_by_xpath("/html[1]/body[1]/div[1]/div[1]/header[1]/div[2]/ul[1]/li[3]/p[1]")
-                text = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.a}]/div[1]/div[2]/div[3]/div[2]/span[1]")
-                text2 = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.b}]/div[1]/div[2]/div[3]/div[2]/span[1]")
-                cost1 = driver.find_element_by_xpath(f"//div[{self.a}]//div[1]//div[2]//div[3]//div[1]//span[1]")
-                cost2 = driver.find_element_by_xpath(f"//div[{self.b}]//div[1]//div[2]//div[3]//div[1]//span[1]")
+                money = self.driver.find_element_by_xpath("/html[1]/body[1]/div[1]/div[1]/header[1]/div[2]/ul[1]/li[3]/p[1]")
+                text = self.driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.a}]/div[1]/div[2]/div[3]/div[2]/span[1]")
+                text2 = self.driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.b}]/div[1]/div[2]/div[3]/div[2]/span[1]")
+                cost1 = self.driver.find_element_by_xpath(f"//div[{self.a}]//div[1]//div[2]//div[3]//div[1]//span[1]")
+                cost2 = self.driver.find_element_by_xpath(f"//div[{self.b}]//div[1]//div[2]//div[3]//div[1]//span[1]")
                 how_much_wait = int(re.search(r'\d+', text.text).group())
                 how_much_wait2 = int(re.search(r'\d+', text2.text).group())
                 price1=int(re.search(r'\d+', cost1.text).group())
@@ -73,16 +83,16 @@ class StartBotThread(QThread):
                 count = count + 2
                 print(f"BOT wykonał już {count} treningow!")
                 
-                wheretomove =  driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.a}]")
-                hover = ActionChains(driver).move_to_element(wheretomove)
+                wheretomove =  self.driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.a}]")
+                hover = ActionChains(self.driver).move_to_element(wheretomove)
                 hover.perform()
-                ele = driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.a}]/div[1]/div[2]/button[1]")
+                ele = self.driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.a}]/div[1]/div[2]/button[1]")
                 ele.click()
 
-                wheretomove =  driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.b}]")
-                hover = ActionChains(driver).move_to_element(wheretomove)
+                wheretomove =  self.driver.find_element_by_xpath(f"/html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[1]/div[2]/div[1]/div[{self.b}]")
+                hover = ActionChains(self.driver).move_to_element(wheretomove)
                 hover.perform()
-                ele = driver.find_element_by_xpath(f"//div[{self.b}]//div[1]//div[2]//button[1]")
+                ele = self.driver.find_element_by_xpath(f"//div[{self.b}]//div[1]//div[2]//button[1]")
                 ele.click()
                 
                 time.sleep(how_much_wait+2)
@@ -95,19 +105,17 @@ class StartBotThread(QThread):
             except ElementClickInterceptedException as e:
                 print("===BOT nie moze wcisnac guzika, poniewaz jest czyms zakryty!===")
                 print(e)
-    def stop(self):
-        self.terminate()
 
 class Bot(QWidget):
 
     def __init__(self,parent=None):
         super().__init__(parent)
         self.interfejs()
-
+        self.running = False
         self.a = 2
         self.b = 3
-        self.login = "fortepiany12@interia.pl" #Tu wpisz wybrany login
-        self.password = "aiqu4voh123"    #Tu wpisz wybrany haslo
+        self.login = "login@interia.pl" #Tu wpisz wybrany login
+        self.password = "password"    #Tu wpisz wybrany haslo
         self.StartBotThread=StartBotThread(self.login,self.password,self.a,self.b)
         
 
@@ -158,32 +166,39 @@ class Bot(QWidget):
 
         exitBtn.clicked.connect(self.koniec)
         startBtn.clicked.connect(self.wybor)
-        stopBtn.clicked.connect(self.wybor)
+        stopBtn.clicked.connect(self.stop_btn)
 
         self.setGeometry(20,20,300,100)
         self.setWindowTitle("Football Team Bot")
         self.show()
 
     def koniec(self):
+        self.StartBotThread.stop()
         self.close()
 
     def wybor(self):
-        self.StartBotThread = StartBotThread(self.login,self.password,self.a,self.b)
-        nadawca = self.sender()
-        try:
-            if nadawca.text() == "&START":
-                if int(self.aktualnie_trenowane.text())>1 and int(self.aktualnie_trenowane.text()) < 10 and int(self.aktualnie_trenowane2.text()) < 10 and int(self.aktualnie_trenowane2.text()) > 1:
-                    self.a = int(self.aktualnie_trenowane.text())
-                    self.b = int(self.aktualnie_trenowane2.text())
-                    self.StartBotThread.start()
-                else:
-                    print("Nie ma takiej opcji")
-            if nadawca.text() == "&STOP":
-                print("Jestem tu")
-                self.StartBotThread.stop()
-                self.StartBotThread.terminate()
-        except ValueError:
-            print("Zla wartosc")        
+        if self.running == 0:
+            self.StartBotThread = StartBotThread(self.login,self.password,self.a,self.b)
+            nadawca = self.sender()
+            try:
+                if nadawca.text() == "&START":
+                    if int(self.aktualnie_trenowane.text())>1 and int(self.aktualnie_trenowane.text()) < 10 and int(self.aktualnie_trenowane2.text()) < 10 and int(self.aktualnie_trenowane2.text()) > 1:
+                        self.a = int(self.aktualnie_trenowane.text())
+                        self.b = int(self.aktualnie_trenowane2.text())
+                        self.running = 1
+                        self.StartBotThread.start()
+                    else:
+                        print("Nie ma takiej opcji")
+            except ValueError:
+                print("Zla wartosc")
+        else:
+            print("Maksymalnie mozesz miec wlaczony jeden bot")
+
+    def stop_btn(self):
+        print("Jesteeem")
+        self.StartBotThread.stop()
+        self.running = 0
+        
         
         
 if __name__ == '__main__':
