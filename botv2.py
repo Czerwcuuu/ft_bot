@@ -114,7 +114,7 @@ class Bot(QWidget):
         self.running = False
         self.a = 2
         self.b = 3
-        self.login = "login@interia.pl" #Tu wpisz wybrany login
+        self.login = "email@mail.com" #Tu wpisz wybrany login
         self.password = "password"    #Tu wpisz wybrany haslo
         self.StartBotThread=StartBotThread(self.login,self.password,self.a,self.b)
         
@@ -135,21 +135,26 @@ class Bot(QWidget):
         #uklad tabelaryczny
         ukladT = QGridLayout()
         ukladT.addWidget(et_FT,0,0)
-        ukladT.addWidget(et_trening,1,0)
+        ukladT.addWidget(et_trening,2,0)
         self.aktualnie_trenowane = QLineEdit()
         self.aktualnie_trenowane2 = QLineEdit()
+        self.login_TB = QLineEdit()
+        self.password_TB = QLineEdit()
 
-        ukladT.addWidget(atakTxt,2,0,1,3)
-        ukladT.addWidget(obronaTxt,3,0,1,3)
-        ukladT.addWidget(rogrywanieTxt,4,0,1,3)
-        ukladT.addWidget(kondycjaTxt,5,0,1,3)
-        ukladT.addWidget(czytaniegryTxt,6,0,1,3)
-        ukladT.addWidget(pressingTxt,7,0,1,3)
-        ukladT.addWidget(stalefragmentyTxt,8,0,1,3)
-        ukladT.addWidget(skutecznoscTxt,9,0,1,3)
+        ukladT.addWidget(self.login_TB,1,0)
+        ukladT.addWidget(self.password_TB,1,1)
+        
+        ukladT.addWidget(atakTxt,3,0,1,3)
+        ukladT.addWidget(obronaTxt,4,0,1,3)
+        ukladT.addWidget(rogrywanieTxt,5,0,1,3)
+        ukladT.addWidget(kondycjaTxt,6,0,1,3)
+        ukladT.addWidget(czytaniegryTxt,7,0,1,3)
+        ukladT.addWidget(pressingTxt,8,0,1,3)
+        ukladT.addWidget(stalefragmentyTxt,9,0,1,3)
+        ukladT.addWidget(skutecznoscTxt,10,0,1,3)
 
-        ukladT.addWidget(self.aktualnie_trenowane,10,0)
-        ukladT.addWidget(self.aktualnie_trenowane2,10,1)
+        ukladT.addWidget(self.aktualnie_trenowane,11,0)
+        ukladT.addWidget(self.aktualnie_trenowane2,11,1)
 
         startBtn = QPushButton("&START",self)
         stopBtn = QPushButton("&STOP",self)
@@ -159,8 +164,8 @@ class Bot(QWidget):
         ukladH1.addWidget(startBtn)
         ukladH1.addWidget(stopBtn)
 
-        ukladT.addLayout(ukladH1,11,0,1,3)
-        ukladT.addWidget(exitBtn,12,0,1,3)
+        ukladT.addLayout(ukladH1,12,0,1,3)
+        ukladT.addWidget(exitBtn,13,0,1,3)
 
         self.setLayout(ukladT)
 
@@ -178,6 +183,8 @@ class Bot(QWidget):
 
     def wybor(self):
         if self.running == 0:
+            self.login = self.login_TB.text()
+            self.password = self.password_TB.text()
             self.StartBotThread = StartBotThread(self.login,self.password,self.a,self.b)
             nadawca = self.sender()
             try:
